@@ -76,6 +76,71 @@ export function apply(ctx: Context) {
         }
       }
     });
+    ctx.command('beer-list [type] [query]', '获取列表信息')
+    .option('categories', '-c 获取酒类别列表')
+    .option('glasses', '-g 获取杯型列表')
+    .option('ingredients', '-i 获取成分列表')
+    .option('alcoholic', '-a 获取酒精类型列表')
+    .action(async ({ options }, type, query) => {
+      let apiUrl;
+      if (options.categories) {
+        apiUrl = `https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list`;
+      } else if (options.glasses) {
+        apiUrl = `https://www.thecocktaildb.com/api/json/v1/1/list.php?g=list`;
+      } else if (options.ingredients) {
+        apiUrl = `https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list`;
+      } else if (options.alcoholic) {
+        apiUrl = `https://www.thecocktaildb.com/api/json/v1/1/list.php?a=list`;
+      } else {
+        return '请提供正确的查询类型（categories, glasses, ingredients, alcoholic）。';
+      }
+
+      try {
+        const response = await axios.get(apiUrl);
+        const data = response.data;
+        
+        if (!data) {
+          return `没有找到相关${type}信息。`;
+        }
+
+        // 根据类型不同，可能需要对数据结构进行适当的调整
+        let list = [];
+        switch (type) {
+          case 'categories':
+            list = data.drinks.map((item) => item.strCategory);
+            break;
+          case 'glasses':
+            list = data.drinks.map((item) => item.strGlass);
+            break;
+          case 'ingredients':
+            list = data.drinks.map((item) => item.strIngredient1);  // 结构可能需调整
+            break;
+          case 'alcoholic':
+            list = data.drinks.map((item) => item.strAlcoholic);
+            break;
+        }
+
+        return `找到以下${type}信息：\n` + list.join('\n');
+      
+      } catch (error) {
+        return handleError(error);
+      }
+    });
+
+  // handleError函数用于统一处理axios的错误
+  function handleError(error) {
+    if (axios.isAxiosError(error)) {
+      if (!error.response) {
+        return '无法连接到酒水信息服务，请检查网络连接。';
+      } else if (error.response.status === 401) {
+        return '无法验证API访问权限，请确认API密钥是否正确。';
+      } else {
+        return `查询酒水信息时遇到错误，服务返回状态码为：${error.response.status}`;
+      }
+    } else {
+      return '发生未知错误，请联系维护人员。';
+    }
+  }
     ctx.command('beer-random', '获取随机酒水信息')
     .alias('br')
     .action(async () => {

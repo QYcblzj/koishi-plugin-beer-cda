@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-beer-cda",
   "description": "给你群的广井菊里(小男娘效果更佳)喝一点上好的🍾吧！",
-  "version": "0.0.46",
+  "version": "0.1.23",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [

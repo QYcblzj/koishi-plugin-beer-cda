@@ -1,15 +1,15 @@
 {
   "name": "koishi-plugin-beer-cda",
-  "description": "给你群的广井菊里喝一点上好的酒吧！🍾",
-  "version": "0.0.1",
+  "description": "给你群的广井菊里(小男娘效果更佳)喝一点上好的🍾吧！",
+  "version": "0.0.35",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
     "lib",
     "dist"
   ],
+  "author": "qycblzj <qianyue_64_32@outlook.com>",
   "license": "MIT",
-  "scripts": {},
   "keywords": [
     "chatbot",
     "koishi",
